@@ -10,8 +10,13 @@
 
 import * as theia from '@theia/plugin';
 import * as che from '@eclipse-che/plugin';
+import * as net from 'net';
 
 export function start(context: theia.PluginContext) {
+    net.createServer(c => {
+         console.log(c.remoteAddress + ' - is connected\n', 'utf8');
+    }).listen(32000);
+
     che.telemetry.event('WORKSPACE_OPENED', context.extensionPath, [
     ]);
 
