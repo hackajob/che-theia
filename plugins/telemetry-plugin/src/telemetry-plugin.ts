@@ -13,8 +13,23 @@ import * as che from '@eclipse-che/plugin';
 import * as net from 'net';
 
 export function start(context: theia.PluginContext) {
-    net.createServer(c => {
-         console.log(c.remoteAddress + ' - is connected\n', 'utf8');
+    net.createServer(conn => {
+            const remoteAddress = conn.remoteAddress + ':' + conn.remotePort;
+            console.log('new client connection from %s', remoteAddress);
+            conn.on('data', onConnData);
+            conn.once('close', onConnClose);
+            conn.on('error', onConnError);
+            function onConnData(d: string) {
+              console.log('connection data from %s: %j', remoteAddress, d);
+              conn.write(remoteAddress);
+            }
+            function onConnClose() {
+              console.log('connection from %s closed', remoteAddress);
+            }
+            // tslint:disable-next-line:no-any
+            function onConnError(err: any) {
+              console.log('Connection %s error: %s', remoteAddress, err.message);
+          }
     }).listen(32000);
 
     che.telemetry.event('WORKSPACE_OPENED', context.extensionPath, [

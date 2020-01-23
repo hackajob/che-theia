@@ -8,9 +8,10 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-import { interfaces } from 'inversify';
+import { interfaces, postConstruct } from 'inversify';
 import { CheTelemetryMain } from '../common/che-protocol';
 import { CheApiService } from '../common/che-protocol';
+import * as net from 'net';
 
 export class CheTelemetryMainImpl implements CheTelemetryMain {
 
@@ -18,6 +19,24 @@ export class CheTelemetryMainImpl implements CheTelemetryMain {
 
     constructor(container: interfaces.Container) {
         this.cheApiService = container.get(CheApiService);
+    }
+
+    @postConstruct()
+    protected async init(): Promise<void> {
+        const client = new net.Socket();
+        client.connect(32000, () => {
+           console.log('Connected');
+           client.write('Hello, server! Love, Client.');
+        });
+
+        client.on('data', data => {
+            console.log('Received: ' + data);
+            client.destroy(); // kill client after server's response
+        });
+
+        client.on('close', () => {
+            console.log('Connection closed');
+        });
     }
 
     async $event(id: string, ownerId: string, properties: [string, string][]): Promise<void> {
