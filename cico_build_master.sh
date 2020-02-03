@@ -22,7 +22,12 @@ set -e
 
 parse "$@"
 
+export CDN_PREFIX=https://static.developers.redhat.com/che/theia_artifacts/
+export MONACO_CDN_PREFIX=https://cdn.jsdelivr.net/npm/
+
 install_deps
+set +x
 load_jenkins_vars
+set -x
 buildImages
 publishImagesOnQuay

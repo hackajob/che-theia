@@ -8,17 +8,23 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-import { interfaces, postConstruct } from 'inversify';
-import { CheTelemetryMain } from '../common/che-protocol';
+import { interfaces } from 'inversify';
+import { RPCProtocol } from '@theia/plugin-ext/lib/common/rpc-protocol';
+import { CheTelemetryMain, PLUGIN_RPC_CONTEXT, CheTelemetry } from '../common/che-protocol';
 import { CheApiService } from '../common/che-protocol';
-import * as net from 'net';
+import { CommandRegistry } from '@theia/core';
 
 export class CheTelemetryMainImpl implements CheTelemetryMain {
 
     private readonly cheApiService: CheApiService;
 
-    constructor(container: interfaces.Container) {
+    constructor(container: interfaces.Container, rpc: RPCProtocol) {
+        const proxy: CheTelemetry = rpc.getProxy(PLUGIN_RPC_CONTEXT.CHE_TELEMETRY);
         this.cheApiService = container.get(CheApiService);
+        const commandRegistry = container.get(CommandRegistry);
+        commandRegistry.onWillExecuteCommand(event => {
+            proxy.$onWillCommandExecute(event.commandId);
+        });
     }
 
     @postConstruct()

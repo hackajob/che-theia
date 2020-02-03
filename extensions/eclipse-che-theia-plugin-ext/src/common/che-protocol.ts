@@ -8,10 +8,10 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-import { ProxyIdentifier, createProxyIdentifier } from '@theia/plugin-ext/lib/common/rpc-protocol';
 import { che as cheApi } from '@eclipse-che/api';
 import * as che from '@eclipse-che/plugin';
 import { Event, JsonRpcServer } from '@theia/core';
+import { createProxyIdentifier, ProxyIdentifier } from '@theia/plugin-ext/lib/common/rpc-protocol';
 
 /**
  * Workspace plugin API
@@ -46,10 +46,6 @@ export interface CheFactoryMain {
 export interface CheDevfile {
 }
 
-export interface CheGithub {
-    uploadPublicSshKey(publicKey: string): Promise<void>;
-}
-
 export interface CheDevfileMain {
     $createWorkspace(devfilePath: string): Promise<void>;
 }
@@ -65,14 +61,21 @@ export interface CheSshMain {
     $deleteKey(service: string, name: string): Promise<void>;
 }
 
+export interface CheGithub {
+    uploadPublicSshKey(publicKey: string): Promise<void>;
+    getToken(): Promise<string>;
+}
+
 export interface CheGithubMain {
     $uploadPublicSshKey(publicKey: string): Promise<void>;
+    $getToken(): Promise<string>;
 }
 
 /**
  * Telemetry plugin API
  */
 export interface CheTelemetry {
+    $onWillCommandExecute(commandId: string, listner?: che.TelemetryListenerParam): Promise<void>;
 }
 
 export interface CheTelemetryMain {
@@ -97,6 +100,8 @@ export interface CheTask {
     fireTaskExited(event: che.TaskExitedEvent): Promise<void>;
     $runTask(config: che.TaskConfiguration, ctx?: string): Promise<che.TaskInfo>;
     $killTask(taskInfo: che.TaskInfo): Promise<void>;
+    $onDidStartTask(taskInfo: che.TaskInfo): Promise<void>;
+    $onDidEndTask(event: che.TaskExitedEvent): Promise<void>;
 }
 
 export const CheTaskMain = Symbol('CheTaskMain');
@@ -105,6 +110,7 @@ export interface CheTaskMain {
     $disposeTaskRunner(type: string): Promise<void>;
     $fireTaskExited(event: che.TaskExitedEvent): Promise<void>;
     $addTaskSubschema(schema: che.TaskJSONSchema): Promise<void>;
+    $setTaskStatus(options: che.TaskStatusOptions): Promise<void>;
 }
 
 export interface CheSideCarContentReader {
@@ -429,6 +435,7 @@ export interface CheApiService {
 
     getFactoryById(factoryId: string): Promise<cheApi.factory.Factory>;
 
+    getUserId(): Promise<string>;
     getUserPreferences(): Promise<Preferences>;
     getUserPreferences(filter: string | undefined): Promise<Preferences>;
     updateUserPreferences(update: Preferences): Promise<Preferences>;
@@ -444,6 +451,7 @@ export interface CheApiService {
     getAllSshKey(service: string): Promise<cheApi.ssh.SshPair[]>;
     submitTelemetryEvent(id: string, ownerId: string, ip: string, agent: string, resolution: string, properties: [string, string][]): Promise<void>;
     submitTelemetryActivity(): Promise<void>;
+    getOAuthToken(oAuthProvider: string): Promise<string | undefined>;
 }
 
 export const CHE_TASK_SERVICE_PATH = '/che-task-service';

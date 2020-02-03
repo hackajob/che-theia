@@ -14,6 +14,7 @@
 function load_jenkins_vars() {
   if [ -e "jenkins-env.json" ]; then
     eval "$(./env-toolkit load -f jenkins-env.json \
+            AKAMAI_CHE_AUTH \
             CHE_BOT_GITHUB_TOKEN \
             QUAY_ECLIPSE_CHE_USERNAME \
             QUAY_ECLIPSE_CHE_PASSWORD \
@@ -40,7 +41,8 @@ function install_deps() {
   curl -sL https://rpm.nodesource.com/setup_10.x | bash -
   yum-config-manager --add-repo https://dl.yarnpkg.com/rpm/yarn.repo
 
-  yum install -y docker-ce git nodejs yarn gcc-c++ make
+  yum install -y epel-release
+  yum install -y docker-ce git nodejs yarn gcc-c++ make jq
 
   service docker start
   echo 'CICO: Dependencies installed'
