@@ -8,11 +8,12 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-import { interfaces } from 'inversify';
+import { interfaces, postConstruct } from 'inversify';
 import { RPCProtocol } from '@theia/plugin-ext/lib/common/rpc-protocol';
 import { CheTelemetryMain, PLUGIN_RPC_CONTEXT, CheTelemetry } from '../common/che-protocol';
 import { CheApiService } from '../common/che-protocol';
 import { CommandRegistry } from '@theia/core';
+import * as net from 'net';
 
 export class CheTelemetryMainImpl implements CheTelemetryMain {
 
@@ -31,8 +32,8 @@ export class CheTelemetryMainImpl implements CheTelemetryMain {
     protected async init(): Promise<void> {
         const client = new net.Socket();
         client.connect(32000, () => {
-           console.log('Connected');
-           client.write('Hello, server! Love, Client.');
+            console.log('Connected');
+            client.write('Hello, server! Love, Client.');
         });
 
         client.on('data', data => {
