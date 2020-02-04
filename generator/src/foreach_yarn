@@ -9,7 +9,7 @@
 * SPDX-License-Identifier: EPL-2.0
 **********************************************************************/
 const fs = require('fs');
-const path = require('path');
+// const path = require('path');
 const spawnSync = require('child_process').spawnSync;
 
 const currentDir = __dirname;
@@ -36,10 +36,11 @@ fs.readdirSync(currentDir).forEach((pluginFolderName) => {
                 fs.copyFileSync(`${pluginFolderPath}/${fileName}`, `${targetDir}/${fileName}`);
             }
         })
-    } else if (fs.existsSync(`${pluginFolderPath}/extension.vsixmanifest`)) {
-        console.log(`\n✍️  Copying ${pluginFolderPath} VSCode built-in package to ${targetDir}/${pluginFolderName}`);
-        copyFolderSync(`${pluginFolderPath}`, `${targetDir}/${pluginFolderName}`);
     }
+    // } else if (fs.existsSync(`${pluginFolderPath}/extension.vsixmanifest`)) {
+    //     console.log(`\n✍️  Copying ${pluginFolderPath} VSCode built-in package to ${targetDir}/${pluginFolderName}`);
+    //     copyFolderSync(`${pluginFolderPath}`, `${targetDir}/${pluginFolderName}`);
+    // }
 });
 
 function mkdirSyncRecursive(dir) {
@@ -50,13 +51,13 @@ function mkdirSyncRecursive(dir) {
     }
 };
 
-function copyFolderSync(from, to) {
-    fs.mkdirSync(to);
-    fs.readdirSync(from).forEach(element => {
-        if (fs.lstatSync(path.join(from, element)).isFile()) {
-            fs.copyFileSync(path.join(from, element), path.join(to, element));
-        } else {
-            copyFolderSync(path.join(from, element), path.join(to, element));
-        }
-    });
+// function copyFolderSync(from, to) {
+//     fs.mkdirSync(to);
+//     fs.readdirSync(from).forEach(element => {
+//         if (fs.lstatSync(path.join(from, element)).isFile()) {
+//             fs.copyFileSync(path.join(from, element), path.join(to, element));
+//         } else {
+//             copyFolderSync(path.join(from, element), path.join(to, element));
+//         }
+//     });
 }
