@@ -60,4 +60,4 @@ function mkdirSyncRecursive(dir) {
 //             copyFolderSync(path.join(from, element), path.join(to, element));
 //         }
 //     });
-}
+// }
