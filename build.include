@@ -11,11 +11,11 @@ set -e
 set -u
 
 IMAGE_TAG="latest"
-THEIA_GITHUB_REPO="eclipse-theia/theia"
-THEIA_VERSION="master"
-THEIA_BRANCH="master"
-THEIA_COMMIT_SHA="c9db9754"
-THEIA_GIT_REFS="refs\\/heads\\/master"
+THEIA_GITHUB_REPO="hackajob/theia"
+THEIA_VERSION="hackajob-1.10.0"
+THEIA_BRANCH="hackajob-1.10.0"
+THEIA_COMMIT_SHA="e30d61dd25c1313098aa2054a44b4d3b9fd7b5b0"
+THEIA_GIT_REFS="refs\\/heads\\/hackajob-1.10.0"
 THEIA_DOCKER_IMAGE_VERSION="7.26.1"
 
 prepare_yarn_root_args() {

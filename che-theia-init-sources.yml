@@ -7,9 +7,7 @@ sources:
     - extensions/eclipse-che-theia-terminal
     - extensions/eclipse-che-theia-user-preferences
     - extensions/che-theia-hosted-plugin-manager-extension
-    - extensions/eclipse-che-theia-dashboard
     - extensions/eclipse-che-theia-activity-tracker
-    - extensions/eclipse-che-theia-about
     - extensions/eclipse-che-theia-preferences-provider-extension
     - extensions/eclipse-che-theia-git-provisioner
     - extensions/eclipse-che-theia-logging
@@ -23,11 +21,9 @@ sources:
   plugins:
     - plugins/containers-plugin
     - plugins/workspace-plugin
-    - plugins/resource-monitor-plugin
     - plugins/ports-plugin
     - plugins/task-plugin
     - plugins/welcome-plugin
     - plugins/ssh-plugin
     - plugins/telemetry-plugin
-    - plugins/github-auth-plugin
   checkoutTo: 7.26.x
